@@ -6,6 +6,8 @@
  * @since 1.0.0
  */
 
+// phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound
+
 /**
  * Core class to handle validation of translations.
  *
@@ -163,16 +165,14 @@ class GP_Validation_Rules {
 					$this->errors[] = $this->construct_error_message( $rule );
 					$verdict        = false;
 				}
-			} else {
-				if ( null === $callback['negative'] ) {
-					if ( $callback['positive']( ...$args ) ) {
-						$this->errors[] = $this->construct_error_message( $rule );
-						$verdict        = false;
-					}
-				} elseif ( ! $callback['negative']( ...$args ) ) {
+			} elseif ( null === $callback['negative'] ) {
+				if ( $callback['positive']( ...$args ) ) {
 					$this->errors[] = $this->construct_error_message( $rule );
 					$verdict        = false;
 				}
+			} elseif ( ! $callback['negative']( ...$args ) ) {
+				$this->errors[] = $this->construct_error_message( $rule );
+				$verdict        = false;
 			}
 		}
 		return $verdict;

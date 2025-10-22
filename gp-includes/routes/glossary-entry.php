@@ -141,10 +141,8 @@ class GP_Route_Glossary_Entry extends GP_Route_Main {
 
 		if ( ! $new_glossary_entry->validate() ) {
 			$this->errors = $new_glossary_entry->errors;
-		} else {
-			if ( ! $glossary_entry->update( $new_glossary_entry ) ) {
+		} elseif ( ! $glossary_entry->update( $new_glossary_entry ) ) {
 				$this->errors = $glossary_entry->errors;
-			}
 		}
 
 		if ( $this->errors ) {
@@ -285,7 +283,7 @@ class GP_Route_Glossary_Entry extends GP_Route_Main {
 			return;
 		}
 
-		if ( ! is_uploaded_file( $_FILES['import-file']['tmp_name'] ) ) {
+		if ( ! is_uploaded_file( $_FILES['import-file']['tmp_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$this->redirect_with_error( __( 'Error uploading the file.', 'glotpress' ) );
 			return;
 		}
@@ -295,7 +293,7 @@ class GP_Route_Glossary_Entry extends GP_Route_Main {
 			GP::$glossary_entry->delete_many( array( 'glossary_id' => $glossary->id ) );
 		}
 
-		$glossary_entries_added = $this->read_glossary_entries_from_file( $_FILES['import-file']['tmp_name'], $glossary->id, $locale->slug );
+		$glossary_entries_added = $this->read_glossary_entries_from_file( $_FILES['import-file']['tmp_name'], $glossary->id, $locale->slug ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		if ( empty( $this->errors ) && is_int( $glossary_entries_added ) ) {
 			$this->notices[] = sprintf(
@@ -360,7 +358,7 @@ class GP_Route_Glossary_Entry extends GP_Route_Main {
 				}
 				$created_glossary_entry = GP::$glossary_entry->create_and_select( $new_glossary_entry );
 				if ( $created_glossary_entry ) {
-					$glossary_entries++;
+					++$glossary_entries;
 				}
 			}
 		}
@@ -368,5 +366,4 @@ class GP_Route_Glossary_Entry extends GP_Route_Main {
 		fclose( $f );
 		return $glossary_entries;
 	}
-
 }
